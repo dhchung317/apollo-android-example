@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                 addMutation(latitude.text.toString().toDouble(),longitude.text.toString().toDouble())
                 latitude.text.clear()
                 longitude.text.clear()
-                Toast.makeText(this, "location sent!",Toast.LENGTH_SHORT)
+                Toast.makeText(this, "location sent!",Toast.LENGTH_SHORT).show()
             }
         }
 
