@@ -1,0 +1,6 @@
+mutation addLocation($latitude: Float!, $longitude: Float!){
+    addLocation(latitude: $latitude, longitude: $longitude){
+        latitude
+        longitude
+    }
+}
