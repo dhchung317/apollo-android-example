@@ -1,20 +1,37 @@
 package com.example.apollotutorial
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.apollographql.apollo.ApolloCall
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.example.apollotutorial.client.apolloClient
+import java.time.Duration
 
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var apolloClient: ApolloClient
+    private lateinit var sendButton: Button
+    private lateinit var latitude: EditText
+    private lateinit var longitude: EditText
+    private lateinit var goToListButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        sendButton = findViewById(R.id.send)
+        latitude = findViewById(R.id.latitude_editText)
+        longitude = findViewById(R.id.longitude_editText)
+        goToListButton = findViewById(R.id.goToList)
 
         if (Build.VERSION.SDK_INT > 9) {
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -22,9 +39,26 @@ class MainActivity : AppCompatActivity() {
             println("*** My thread is now configured to allow connection")
         }
 
-        val apolloClient = apolloClient(this)
+        apolloClient = apolloClient()
 
-        val mutation = AddLocationMutation(0.91, 10.62)
+        sendButton.setOnClickListener {
+            if(latitude.text.isNotEmpty() && longitude.text.isNotEmpty()){
+                addMutation(latitude.text.toString().toDouble(),longitude.text.toString().toDouble())
+                latitude.text.clear()
+                longitude.text.clear()
+                Toast.makeText(this, "location sent!",Toast.LENGTH_SHORT)
+            }
+        }
+
+        goToListButton.setOnClickListener {
+            val intent = Intent(this, LocationActivity::class.java)
+            startActivity(intent)
+        }
+
+    }
+
+    fun addMutation(latitude: Double, longitude: Double){
+        val mutation = AddLocationMutation(latitude, longitude)
 
         apolloClient
             .mutate(mutation)
@@ -37,16 +71,5 @@ class MainActivity : AppCompatActivity() {
                     Log.e("error", e.message, e);
                 }
             })
-
-        apolloClient.query(LocationGroupQuery())
-            .enqueue(object : ApolloCall.Callback<LocationGroupQuery.Data>() {
-                override fun onFailure(e: ApolloException) {
-                    Log.i("error", e.toString());
-                }
-
-                override fun onResponse(response: Response<LocationGroupQuery.Data>) {
-                    Log.e("onresponse", response.data?.locationGroup.toString());
-                }
-            });
     }
 }

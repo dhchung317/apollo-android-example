@@ -1,13 +1,12 @@
 package com.example.apollotutorial.client
 
-import android.content.Context
 import android.os.Looper
 import com.apollographql.apollo.ApolloClient
 
 private var instance: ApolloClient? = null
 private const val SERVER = "https://hyunki-apollo-server.herokuapp.com/"
 
-fun apolloClient(context: Context): ApolloClient {
+fun apolloClient(): ApolloClient {
     check(Looper.myLooper() == Looper.getMainLooper()) {
         "Only the main thread can get the apolloClient instance"
     }
