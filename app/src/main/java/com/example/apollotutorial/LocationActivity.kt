@@ -11,7 +11,6 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.example.apollotutorial.client.apolloClient
-import com.example.apollotutorial.model.Location
 
 class LocationActivity : AppCompatActivity() {
 
@@ -19,7 +18,7 @@ class LocationActivity : AppCompatActivity() {
     private lateinit var rv: RecyclerView
     private lateinit var adapter: LocationsViewAdapter
 
-    private var list: MutableList<Location> = mutableListOf()
+    private var list: MutableList<LocationGroupQuery.Location> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,26 +44,12 @@ class LocationActivity : AppCompatActivity() {
                 override fun onResponse(response: Response<LocationGroupQuery.Data>) {
                     Log.e("onresponse", response.data?.locationGroup.toString());
 
-                    val newList: MutableList<Location> = mutableListOf()
-
-                    if (response.data?.locationGroup?.isNotEmpty()!!) {
-                        for (loc in response.data?.locationGroup!!) {
-                            newList.add(
-                                Location(
-                                    Option.empty(),
-                                    loc?.latitude!!,
-                                    loc?.longitude!!,
-                                    Option.empty()
-                                )
-                            )
+                    if(response.data?.locationGroup?.locations?.isNotEmpty()!!){
+                        runOnUiThread {
+                            adapter.update(response.data?.locationGroup?.locations as List<LocationGroupQuery.Location>)
                         }
                     }
-
-                    runOnUiThread {
-                        adapter.update(newList)
-                    }
-
                 }
-            });
+            })
     }
 }

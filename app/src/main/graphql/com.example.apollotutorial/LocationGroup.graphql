@@ -1,6 +1,8 @@
 query LocationGroup {
   locationGroup {
-    latitude
-    longitude
+    locations {
+        latitude
+        longitude
+    }
   }
 }
