@@ -1,0 +1,6 @@
+subscription subscribeLocations {
+    locations {
+        latitude
+        longitude
+    }
+}
