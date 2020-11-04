@@ -1,9 +1,7 @@
 package com.example.apollotutorial
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.os.StrictMode
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -14,7 +12,6 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
 import com.example.apollotutorial.client.apolloClient
-import java.time.Duration
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,11 +30,11 @@ class MainActivity : AppCompatActivity() {
         longitude = findViewById(R.id.longitude_editText)
         goToListButton = findViewById(R.id.goToList)
 
-        if (Build.VERSION.SDK_INT > 9) {
-            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-            StrictMode.setThreadPolicy(policy)
-            println("*** My thread is now configured to allow connection")
-        }
+//        if (Build.VERSION.SDK_INT > 9) {
+//            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+//            StrictMode.setThreadPolicy(policy)
+//            println("*** My thread is now configured to allow connection")
+//        }
 
         apolloClient = apolloClient()
 
@@ -66,7 +63,6 @@ class MainActivity : AppCompatActivity() {
                 override fun onResponse(response: Response<AddLocationMutation.Data>) {
                     Log.i("onresponse", response.toString());
                 }
-
                 override fun onFailure(e: ApolloException) {
                     Log.e("error", e.message, e);
                 }
